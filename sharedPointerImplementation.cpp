@@ -1,5 +1,3 @@
-//this is currently not working
-
 #include <iostream>
 using namespace std;
 
@@ -55,7 +53,7 @@ public:
         {
             decrementcounter();
             res = ptr.res;
-            counter = ptr->counter;
+            counter = ptr.counter;
             incrementcounter();
         }
         return *this;
@@ -77,8 +75,8 @@ public:
         if (this != &ptr)
         {
             decrementcounter();
-            res = ptr->res;
-            counter = ptr->counter;
+            res = ptr.res;
+            counter = ptr.counter;
             // incrementcounter();  not required
 
             ptr.res = nullptr;
@@ -126,16 +124,24 @@ public:
 
 int main()
 {
-    sharedptr<int> ptr1;                  // default ctor
-    sharedptr<int> ptr2(new int(10));     // parameterised constructor
-    sharedptr<int> ptr3(ptr2);            // copy constructor
-    ptr3 = ptr2;                          // copy assignment operator
-    sharedptr<int> ptr4(std::move(ptr1)); // move copy constructor
-    ptr2 = std::move(ptr3);               // move copy assignment operator
+    sharedptr<int> ptr1(new int(99)); // default ctor
+    sharedptr<int> ptr2(new int(10)); // parameterised constructor
+    sharedptr<int> ptr3(ptr2);        // copy constructor
+    cout << *ptr2 << " " << ptr2.get() << ". " << ptr2.get_count() << endl;
+    cout << *ptr3 << " " << ptr2.get() << ". " << ptr3.get_count() << endl;
+    // ptr3 = ptr2;                          // copy assignment operator
+    cout << *ptr1 << " " << ptr1.get() << ". " << ptr1.get_count() << endl;
+    sharedptr<int> ptr4(std::move(ptr1)); // move copy constructor. //ptr1 is deleted here
+
+    // cout << *ptr1 << " " << ptr1.get() << endl;
+    cout << *ptr4 << " " << ptr4.get() << ". " << ptr4.get_count() << endl;
+    ptr2 = std::move(ptr3); // move copy assignment operator
+    cout << *ptr2 << " " << ptr2.get() << ". " << ptr2.get_count() << endl;
+    // cout << *ptr3 << " " << ptr2.get() << ". " << ptr3.get_count() << endl;
 
     ptr1.reset(); // set to null
     ptr1.reset(new int(5));
-
+    cout << *ptr1 << " " << ptr1.get() << ". " << ptr1.get_count() << endl;
     cout << *ptr1; // value it is pointing to;  /implementibng * operator
     // ptr1->func(); // implementing -> operator
     ptr1.get();       // get raw pointer
